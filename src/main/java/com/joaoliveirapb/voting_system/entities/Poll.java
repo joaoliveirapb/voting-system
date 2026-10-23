@@ -36,6 +36,9 @@ public class Poll {
     @Column(nullable = false)
     private PollStatus status;
 
+    @Column(name = "total_votes")
+    private int totalVotes;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
