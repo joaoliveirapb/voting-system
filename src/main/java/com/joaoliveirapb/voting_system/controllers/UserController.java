@@ -1,7 +1,7 @@
 package com.joaoliveirapb.voting_system.controllers;
 
 import com.joaoliveirapb.voting_system.dtos.CreateUserRequestDTO;
-import com.joaoliveirapb.voting_system.entities.User;
+import com.joaoliveirapb.voting_system.dtos.UserResponseDTO;
 import com.joaoliveirapb.voting_system.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +19,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
         try {
-            User response = userService.createUser(request);
+            UserResponseDTO response = userService.createUser(request);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {

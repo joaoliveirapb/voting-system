@@ -1,6 +1,7 @@
 package com.joaoliveirapb.voting_system.services;
 
 import com.joaoliveirapb.voting_system.dtos.CreateUserRequestDTO;
+import com.joaoliveirapb.voting_system.dtos.UserResponseDTO;
 import com.joaoliveirapb.voting_system.entities.User;
 import com.joaoliveirapb.voting_system.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User createUser(CreateUserRequestDTO request) {
+    public UserResponseDTO createUser(CreateUserRequestDTO request) {
         Optional<User> userWithSameEmail = userRepository.findByEmail(request.email());
 
         if (userWithSameEmail.isPresent()) {
@@ -22,6 +23,8 @@ public class UserService {
 
         User newUser = new User(request.name(), request.email());
 
-        return userRepository.save(newUser);
+        User userSaved = userRepository.save(newUser);
+
+        return new UserResponseDTO(userSaved);
     }
 }
