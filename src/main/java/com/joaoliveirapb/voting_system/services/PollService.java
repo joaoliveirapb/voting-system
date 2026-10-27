@@ -42,6 +42,6 @@ public class PollService {
     }
 
     public List<PollResponseDTO> getPolls() {
-        return pollRepository.findAll().stream().map(PollResponseDTO::new).toList();
+        return pollRepository.findAllWithVotingOptions().stream().map(PollResponseDTO::new).toList();
     }
 }
