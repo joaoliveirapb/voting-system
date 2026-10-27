@@ -26,6 +26,6 @@ public record CreatePollRequestDTO(
 
         @NotNull(message = "Opções de votação é obrigatório")
         @NotEmpty(message = "Deve ter pelo menos duas opções de voto")
-        @Min(value = 2, message = "Deve ter pelo menos duas opções de voto")
+        @Size(min = 2, message = "Deve ter pelo menos duas opções de voto")
         Set<CreateVotingOptionDTO> votingOptions
 ) {}

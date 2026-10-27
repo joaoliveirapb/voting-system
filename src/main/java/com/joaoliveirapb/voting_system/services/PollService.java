@@ -1,8 +1,8 @@
 package com.joaoliveirapb.voting_system.services;
 
 import com.joaoliveirapb.voting_system.dtos.CreatePollRequestDTO;
+import com.joaoliveirapb.voting_system.dtos.PollResponseDTO;
 import com.joaoliveirapb.voting_system.entities.Poll;
-import com.joaoliveirapb.voting_system.entities.PollStatus;
 import com.joaoliveirapb.voting_system.entities.User;
 import com.joaoliveirapb.voting_system.entities.VotingOption;
 import com.joaoliveirapb.voting_system.repositories.PollRepository;
@@ -19,13 +19,12 @@ public class PollService {
     private final PollRepository pollRepository;
     private final UserRepository userRepository;
 
-    public Poll createPoll(CreatePollRequestDTO request) {
+    public PollResponseDTO createPoll(CreatePollRequestDTO request) {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para criar enquete"));
 
-        Set<VotingOption> votingOption = request.votingOptions().stream().map(optionDTO -> {
-            return new VotingOption(optionDTO.name());
-        }).collect(Collectors.toSet());
+        Set<VotingOption> votingOption = request.votingOptions().stream()
+                .map(optionDTO -> new VotingOption(optionDTO.name())).collect(Collectors.toSet());
 
         Poll newPoll = new Poll(
                 user,
@@ -36,6 +35,8 @@ public class PollService {
                 votingOption
         );
 
-        return pollRepository.save(newPoll);
+        Poll pollSaved = pollRepository.save(newPoll);
+
+        return new PollResponseDTO(pollSaved);
     }
 }
