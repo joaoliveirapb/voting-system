@@ -32,9 +32,19 @@ public class VotingOption {
     @Column(name = "vote_count", nullable = false)
     private int voteCount;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "votingOption", fetch = FetchType.LAZY)
     private Set<Vote> votes = new HashSet<>();
+
+    public VotingOption(String name) {
+        this.name = name;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        voteCount = 0;
+        createdAt = LocalDateTime.now();
+    }
 }

@@ -39,15 +39,40 @@ public class Poll {
     @Column(name = "total_votes")
     private int totalVotes;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
-    @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<VotingOption> votingOptions = new HashSet<>();
 
     @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)
     private Set<Vote> votes = new HashSet<>();
+
+    public Poll(
+            User user,
+            String title,
+            String question,
+            PollStatus status,
+            LocalDateTime endAt,
+            Set<VotingOption> votingOptions
+    ) {
+        this.user = user;
+        this.title = title;
+        this.question = question;
+        this.status = status;
+        this.endAt = endAt;
+        this.votingOptions.addAll(votingOptions);
+        for (VotingOption option : votingOptions) {
+            option.setPoll(this);
+        }
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        totalVotes = 0;
+        createdAt = LocalDateTime.now();
+    }
 }
