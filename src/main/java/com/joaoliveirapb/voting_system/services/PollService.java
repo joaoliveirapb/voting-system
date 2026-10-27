@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,5 +45,9 @@ public class PollService {
 
     public List<PollResponseDTO> getPolls() {
         return pollRepository.findAllWithVotingOptions().stream().map(PollResponseDTO::new).toList();
+    }
+
+    public Optional<PollResponseDTO> getPollById(UUID id) {
+        return pollRepository.findByIdWithVotingOptions(id).map(PollResponseDTO::new);
     }
 }

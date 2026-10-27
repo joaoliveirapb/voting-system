@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, UUID> {
     @Query("SELECT DISTINCT p FROM Poll p LEFT JOIN FETCH p.votingOptions")
     List<Poll> findAllWithVotingOptions();
+
+    @Query(value = "SELECT p FROM Poll p LEFT JOIN FETCH p.votingOptions WHERE p.id = :id")
+    Optional<Poll> findByIdWithVotingOptions(UUID id);
 }

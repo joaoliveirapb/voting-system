@@ -13,6 +13,7 @@ public record PollResponseDTO(
         String question,
         PollStatus pollStatus,
         int totalVotes,
+        LocalDateTime createdAt,
         LocalDateTime endAt,
         List<VotingOptionDTO> votingOptions
 ) {
@@ -23,6 +24,7 @@ public record PollResponseDTO(
                 pollEntity.getQuestion(),
                 pollEntity.getStatus(),
                 pollEntity.getTotalVotes(),
+                pollEntity.getCreatedAt(),
                 pollEntity.getEndAt(),
                 pollEntity.getVotingOptions().stream()
                         .map(option -> new VotingOptionDTO(option.getId(), option.getName(), option.getVoteCount()))
