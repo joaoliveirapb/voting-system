@@ -10,6 +10,7 @@ import com.joaoliveirapb.voting_system.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,5 +39,9 @@ public class PollService {
         Poll pollSaved = pollRepository.save(newPoll);
 
         return new PollResponseDTO(pollSaved);
+    }
+
+    public List<PollResponseDTO> getPolls() {
+        return pollRepository.findAll().stream().map(PollResponseDTO::new).toList();
     }
 }

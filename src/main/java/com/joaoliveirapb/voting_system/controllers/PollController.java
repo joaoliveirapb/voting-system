@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/polls")
@@ -27,6 +26,18 @@ public class PollController {
         } catch (Exception e) {
             System.out.println("[PollController::createPoll]: Erro ao criar enquete: " + e.getMessage());
             throw new RuntimeException("Erro ao criar enquete: " + e.getMessage());
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PollResponseDTO>> getPolls() {
+        try {
+            List<PollResponseDTO> response = pollService.getPolls();
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("[PollController::getPolls]: Erro ao listar enquetes: " + e.getMessage());
+            throw new RuntimeException("Erro ao listar enquetes: " + e.getMessage());
         }
     }
 }
