@@ -1,6 +1,7 @@
 package com.joaoliveirapb.voting_system.controllers;
 
 import com.joaoliveirapb.voting_system.dtos.CreatePollRequestDTO;
+import com.joaoliveirapb.voting_system.dtos.GetPollResultsResponseDTO;
 import com.joaoliveirapb.voting_system.dtos.PollResponseDTO;
 import com.joaoliveirapb.voting_system.dtos.RegisterVoteRequestDTO;
 import com.joaoliveirapb.voting_system.services.PollService;
@@ -74,6 +75,18 @@ public class PollController {
         } catch (Exception e) {
             System.out.println("[PollController::endPoll]: Erro ao encerrar enquete: " + e.getMessage());
             throw new RuntimeException("Erro ao encerrar enquete: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("{id}/result")
+    public ResponseEntity<GetPollResultsResponseDTO> getPollResults(@PathVariable UUID id) {
+        try {
+            GetPollResultsResponseDTO response = pollService.getPollResults(id);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("[PollController::getPollResults]: Erro ao buscar resultado da enquete: " + e.getMessage());
+            throw new RuntimeException("Erro ao buscar resultado da enquete: " + e.getMessage());
         }
     }
 }

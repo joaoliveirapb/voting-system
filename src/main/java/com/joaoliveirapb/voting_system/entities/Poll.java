@@ -46,6 +46,7 @@ public class Poll {
     private LocalDateTime endAt;
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("voteCount DESC")
     private Set<VotingOption> votingOptions = new HashSet<>();
 
     @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY)

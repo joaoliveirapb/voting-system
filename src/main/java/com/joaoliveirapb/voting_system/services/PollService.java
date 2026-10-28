@@ -1,8 +1,6 @@
 package com.joaoliveirapb.voting_system.services;
 
-import com.joaoliveirapb.voting_system.dtos.CreatePollRequestDTO;
-import com.joaoliveirapb.voting_system.dtos.RegisterVoteRequestDTO;
-import com.joaoliveirapb.voting_system.dtos.PollResponseDTO;
+import com.joaoliveirapb.voting_system.dtos.*;
 import com.joaoliveirapb.voting_system.entities.*;
 import com.joaoliveirapb.voting_system.repositories.PollRepository;
 import com.joaoliveirapb.voting_system.repositories.UserRepository;
@@ -12,10 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,5 +83,39 @@ public class PollService {
         }
 
         poll.setStatus(PollStatus.COMPLETED);
+    }
+
+    public GetPollResultsResponseDTO getPollResults(UUID pollId) {
+        Poll poll = pollRepository.findById(pollId)
+                .orElseThrow(() -> new RuntimeException("Enquete não encontrada para ver resultado"));
+
+        VotingOption winner = poll.getVotingOptions().stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Vencedor não encontrado"));
+
+        return new GetPollResultsResponseDTO(
+                poll.getId(),
+                poll.getQuestion(),
+                poll.getTotalVotes(),
+                winner.getName(),
+                poll.getVotingOptions().stream()
+                        .map(option -> new VotingOptionForPollResultsDTO(
+                                option.getId(),
+                                option.getName(),
+                                option.getVoteCount(),
+                                calculatePercentage(option.getVoteCount(), poll.getTotalVotes())
+                        ))
+                        .toList()
+        );
+    }
+
+    private double calculatePercentage(int value, int totalValue) {
+        if (value == 0 || totalValue == 0) {
+            return 0;
+        }
+
+        double percentage = ((double) value / totalValue) * 100;
+
+        return BigDecimal.valueOf(percentage).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }
