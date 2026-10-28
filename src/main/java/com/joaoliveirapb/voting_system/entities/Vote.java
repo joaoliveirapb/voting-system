@@ -34,4 +34,15 @@ public class Vote {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Vote(Poll poll, VotingOption votingOption, User user) {
+        this.poll = poll;
+        this.votingOption = votingOption;
+        this.user = user;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

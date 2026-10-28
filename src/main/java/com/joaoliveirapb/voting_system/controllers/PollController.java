@@ -2,6 +2,7 @@ package com.joaoliveirapb.voting_system.controllers;
 
 import com.joaoliveirapb.voting_system.dtos.CreatePollRequestDTO;
 import com.joaoliveirapb.voting_system.dtos.PollResponseDTO;
+import com.joaoliveirapb.voting_system.dtos.RegisterVoteRequestDTO;
 import com.joaoliveirapb.voting_system.services.PollService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,20 @@ public class PollController {
         try {
             return pollService.getPollById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
-            System.out.println("[PollController::createPoll]: Erro ao buscar enquete: " + e.getMessage());
-            throw new RuntimeException("[PollController::createPoll]: Erro ao buscar enquete: " + e.getMessage());
+            System.out.println("[PollController::getPoll]: Erro ao buscar enquete: " + e.getMessage());
+            throw new RuntimeException("Erro ao buscar enquete: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<String> registerVote(@PathVariable UUID id, @Valid @RequestBody RegisterVoteRequestDTO request) {
+        try {
+            pollService.registerVote(id, request);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Voto registrado com sucesso");
+        } catch (Exception e) {
+            System.out.println("[PollController::registerVote]: Erro ao registrar voto: " + e.getMessage());
+            throw new RuntimeException("Erro ao registrar voto: " + e.getMessage());
         }
     }
 }
