@@ -75,4 +75,16 @@ public class PollService {
         votingOption.setVoteCount(votingOption.getVoteCount() + 1);
         poll.setTotalVotes(poll.getTotalVotes() + 1);
     }
+
+    @Transactional
+    public void endPoll(UUID pollId) {
+        Poll poll = pollRepository.findById(pollId)
+                .orElseThrow(() -> new RuntimeException("Enquete não encontrada para encerramento"));
+
+        if (poll.getStatus().equals(PollStatus.COMPLETED)) {
+            return;
+        }
+
+        poll.setStatus(PollStatus.COMPLETED);
+    }
 }

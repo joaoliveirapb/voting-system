@@ -53,7 +53,7 @@ public class PollController {
         }
     }
 
-    @PostMapping("{id}")
+    @PostMapping("{id}/votes")
     public ResponseEntity<String> registerVote(@PathVariable UUID id, @Valid @RequestBody RegisterVoteRequestDTO request) {
         try {
             pollService.registerVote(id, request);
@@ -62,6 +62,18 @@ public class PollController {
         } catch (Exception e) {
             System.out.println("[PollController::registerVote]: Erro ao registrar voto: " + e.getMessage());
             throw new RuntimeException("Erro ao registrar voto: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("{id}/end")
+    public ResponseEntity<String> endPoll(@PathVariable UUID id) {
+        try {
+            pollService.endPoll(id);
+
+            return ResponseEntity.ok("Enquete encerrada com sucesso");
+        } catch (Exception e) {
+            System.out.println("[PollController::endPoll]: Erro ao encerrar enquete: " + e.getMessage());
+            throw new RuntimeException("Erro ao encerrar enquete: " + e.getMessage());
         }
     }
 }
